@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  ###################################
+  # Student: The student microservice
+  ###################################
+  student:
+    build:
+      context: ./backend
+      dockerfile: student.DOCKERFILE
+    image: student
+    restart: always
+    ports:
+      - 6000:6000
+
