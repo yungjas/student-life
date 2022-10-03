@@ -10,6 +10,28 @@ services:
       dockerfile: student.DOCKERFILE
     image: student
     restart: always
+    # environment:
+    #   SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/student_life
     ports:
       - 6000:6000
+  
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: student_life
+    ports:
+      - "3310:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8083:80"
 
