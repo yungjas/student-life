@@ -2,28 +2,30 @@ version: "3.9"
 
 services:
   ###################################
-  # Student: The student microservice
+  # Student_School: The Student_School microservice
   ###################################
-  student:
+  student_school:
     build:
-      context: ./backend
-      dockerfile: student.DOCKERFILE
-    image: student
+      context: ./backend/services/student_school
+      dockerfile: student_school.DOCKERFILE
+    image: student_school
     restart: always
-    # environment:
-    #   SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/student_life
+    environment:
+      SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/student_school
     ports:
       - 6000:6000
   
   db:
     image: mysql
     restart: always
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_PASSWORD: root
-      MYSQL_DATABASE: student_life
+    volumes:             
+      - ./backend/init:/docker-entrypoint-initdb.d
     ports:
-      - "3310:3306"
+      - 3310:3306
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -33,5 +35,5 @@ services:
       PMA_USER: root
       PMA_PASSWORD: root
     ports:
-      - "8083:80"
+      - 8083:80
 
