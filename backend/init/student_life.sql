@@ -26,3 +26,18 @@ INSERT INTO `school` (`school_name`) VALUES
 
 INSERT INTO `student` (`student_name`, `school_id`) VALUES
 ("Jasmine", 1);
+
+
+CREATE DATABASE IF NOT EXISTS `book`;
+USE `book`;
+
+DROP TABLE IF EXISTS `book`;
+CREATE TABLE `book` (
+    `book_id` int(11) NOT NULL AUTO_INCREMENT,
+    `book_name` varchar(64) NOT NULL,
+    `book_qty` int(11) NOT NULL,
+    PRIMARY KEY(`book_id`)
+);
+
+INSERT INTO `book` (`book_name`, `book_qty`) VALUES
+("Le Book", 20);

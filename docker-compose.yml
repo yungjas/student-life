@@ -15,6 +15,20 @@ services:
     ports:
       - 6000:6000
   
+  ###################################
+  # Book: The book microservice
+  ###################################
+  book:
+    build:
+      context: ./backend/services/book
+      dockerfile: book.DOCKERFILE
+    image: book
+    restart: always
+    environment:
+      SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/book
+    ports:
+      - 6010:6010
+  
   db:
     image: mysql
     restart: always
