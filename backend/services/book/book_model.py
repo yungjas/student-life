@@ -1,4 +1,4 @@
-from book_api import db
+from config import db
 
 class Book(db.Model):
     __tablename__ = 'book'
@@ -6,8 +6,7 @@ class Book(db.Model):
     book_name = db.Column(db.String(64), nullable=False)
     book_qty = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, book_id, book_name, book_qty):
-        self.book_id = book_id
+    def __init__(self, book_name, book_qty):
         self.book_name = book_name
         self.book_qty = book_qty
         

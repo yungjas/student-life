@@ -1,24 +1,11 @@
-import os
-from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 import book_model
 
-# flask configs
-app = Flask(__name__)
-db = SQLAlchemy(app)
-
-# CORS config
-CORS(app)
-
-# db config
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+mysqlconnector://root@localhost:3308/book'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
+from config import db, app
+from flask import request, jsonify
 
 
-@app.route('/api/book/all', methods=["GET"])
-def hello():
+@app.route("/api/book/all", methods=["GET"])
+def get_books_all():
     book_list = book_model.Book.query.all()
 
     if len(book_list):
@@ -29,13 +16,134 @@ def hello():
                     "books": [book.json() for book in book_list]
                 }
             }
-        )
+        ), 200
     return jsonify(
         {
             "code": 404,
             "message": "There are no books"
         }
-    )
+    ), 404
+
+
+@app.route("/api/book/<int:book_id>", methods=["GET"])
+def get_book(book_id):
+    book = book_model.Book.query.filter_by(book_id=book_id).first()
+    if book:
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "book": book.json()
+                }
+            }
+        ), 200
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"Book with id {book_id} not found"
+        }
+    ), 404
+
+
+@app.route("/api/book/create", methods=["POST"])
+def create_book():
+    data = request.get_json()
+    book = book_model.Book(**data)
+
+    try:
+        db.session.add(book)
+        db.session.commit()
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": f"Book was unable to be created due to {e}"
+            }
+        ), 500
+    
+    return jsonify(
+        {
+            "code": 201,
+            "data": {
+                "book": book.json()
+            }
+        }
+    ), 201
+
+
+@app.route("/api/book/update/<int:book_id>", methods=["PUT"])
+def update_book(book_id):
+    # retrieve the book to be changed
+    book = book_model.Book.query.filter_by(book_id=book_id).first()
+
+    if book:
+        try:
+            data = request.get_json()
+
+            if data["book_name"]:
+                book.book_name = data["book_name"]
+            if data["book_qty"]:
+                book.book_qty = data["book_qty"]
+            
+            # merging new data with existing data
+            db.session.merge(book)
+            db.session.commit()
+
+            return jsonify(
+                {
+                    "code": 200,
+                    "data":{
+                        "book": book.json()
+                    }
+                }
+            ),200
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": f"Book was unable to be updated due to {e}"
+                }
+            ), 500
+    
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"Book with id {book_id} not found"
+        }
+    ), 404
+
+
+@app.route("/api/book/delete/<int:book_id>", methods=["DELETE"])
+def delete_book(book_id):
+    # retrieve the book to be deleted
+    book = book_model.Book.query.filter_by(book_id=book_id).first()
+
+    if book:
+        try:
+            db.session.delete(book)
+            db.session.commit()
+
+            return jsonify(
+                {
+                    "code": 200,
+                    "message": "Book deleted"
+                }
+            ), 200
+
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": f"Book was unable to be deleted due to {e}"
+                }, 500
+            ), 500
+    
+    return jsonify(
+        {
+            "code": 404,
+            "message": f"Book with id {book_id} not found"
+        }
+    ), 404 
 
 
 if __name__ == "__main__":
