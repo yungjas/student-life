@@ -7,6 +7,6 @@ COPY requirements.txt .
 RUN apt-get update \ 
     && pip install -r requirements.txt
 
-COPY ./student_school.py .
+COPY ./student_school_api.py .
 
-CMD ["python", "./student_school.py"]
+CMD ["python", "./student_school_api.py"]
