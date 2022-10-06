@@ -1,7 +1,8 @@
-from flask import Flask
+import os
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import os 
+import book_model
 
 # flask configs
 app = Flask(__name__)
@@ -16,9 +17,25 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
 
-@app.route('/')
+@app.route('/api/book/all', methods=["GET"])
 def hello():
-    return 'Hello, World!'
+    book_list = book_model.Book.query.all()
+
+    if len(book_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "books": [book.json() for book in book_list]
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no books"
+        }
+    )
 
 
 if __name__ == "__main__":

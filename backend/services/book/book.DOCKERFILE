@@ -7,6 +7,6 @@ COPY requirements.txt .
 RUN apt-get update \ 
     && pip install -r requirements.txt
 
-COPY ./book_api.py .
+COPY . .
 
 CMD ["python", "./book_api.py"]
