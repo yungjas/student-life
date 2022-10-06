@@ -1,24 +1,49 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from os import environ
+import student_school_model
 
-# flask configs
-app = Flask(__name__)
-db = SQLAlchemy(app)
-
-# CORS config
-CORS(app)
-
-# db configs
-app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+mysqlconnector://root@localhost:3308/student_school'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
+from flask import Flask, request, jsonify
+from config import app, db
 
 
-@app.route('/')
-def hello():
-    return 'Hello, World!'
+@app.route("/api/student/all", methods=["GET"])
+def get_student_all():
+    student_list = student_school_model.Student.query.all()
+    if len(student_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data":{
+                    "students": [student.json() for student in student_list]
+                }
+            }
+        ),200
+    
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no students"
+        }
+    )
+
+
+@app.route("/api/school/all", methods=["GET"])
+def get_school_all():
+    school_list = student_school_model.School.query.all()
+    if len(school_list):
+        return jsonify(
+            {
+                "code": 200,
+                "data":{
+                    "schools": [school.json() for school in school_list]
+                }
+            }
+        ),200
+    
+    return jsonify(
+        {
+            "code": 404,
+            "message": "There are no schools"
+        }
+    )
 
 
 if __name__ == "__main__":

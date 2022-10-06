@@ -11,7 +11,7 @@ services:
     image: student_school
     restart: always
     environment:
-      SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/student_school
+      SQLALCHEMY_DATABASE_URI: ${STUDENT_SCHOOL_DB}
     ports:
       - 6000:6000
   
@@ -25,7 +25,7 @@ services:
     image: book
     restart: always
     environment:
-      SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/book
+      SQLALCHEMY_DATABASE_URI: ${BOOK_DB}
     ports:
       - 6010:6010
   
@@ -35,7 +35,7 @@ services:
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:             
       - ./backend/init:/docker-entrypoint-initdb.d
     ports:
@@ -47,7 +47,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_USER: root
-      PMA_PASSWORD: root
+      PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
       - 8083:80
 

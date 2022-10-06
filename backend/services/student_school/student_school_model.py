@@ -1,4 +1,4 @@
-from student_school_api import db
+from config import db
 
 class School(db.Model):
     __tablename__ = 'school'
