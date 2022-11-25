@@ -1,12 +1,16 @@
-import student_school_model
+from flask import Flask, request, jsonify, Blueprint
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from model.StudentSchool import Student, School
+from os import environ
+from config import db, app
 
-from flask import Flask, request, jsonify
-from config import app, db
+student_school_blueprint = Blueprint("student_school", __name__)
 
 
-@app.route("/api/student/all", methods=["GET"])
+@student_school_blueprint.route("/api/student/all", methods=["GET"])
 def get_student_all():
-    student_list = student_school_model.Student.query.all()
+    student_list = Student.query.all()
     if len(student_list):
         return jsonify(
             {
@@ -25,9 +29,9 @@ def get_student_all():
     )
 
 
-@app.route("/api/school/all", methods=["GET"])
+@student_school_blueprint.route("/api/school/all", methods=["GET"])
 def get_school_all():
-    school_list = student_school_model.School.query.all()
+    school_list = School.query.all()
     if len(school_list):
         return jsonify(
             {
@@ -44,8 +48,3 @@ def get_school_all():
             "message": "There are no schools"
         }
     )
-
-
-if __name__ == "__main__":
-    # should be binding to 0.0.0.0 if you want the container to be accessible from outside
-    app.run(host="0.0.0.0", port=6000, debug=True)

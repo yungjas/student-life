@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS `student_school`;
-USE `student_school`;
-
 DROP TABLE IF EXISTS `school`;
 CREATE TABLE `school` (
     `school_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,9 +24,6 @@ INSERT INTO `school` (`school_name`) VALUES
 INSERT INTO `student` (`student_name`, `school_id`) VALUES
 ("Jasmine", 1);
 
-
-CREATE DATABASE IF NOT EXISTS `book`;
-USE `book`;
 
 DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
