@@ -1,3 +1,8 @@
+# if you put Flask and db configs under app.py, since in this scenario api files import Flask and db configs from app.py also, when app.py tries to import api files for Blueprint, it will cause a circular import error
+
+# hence best is to have a separate config file so that files in models and api as well as app.py can import Flask and db configs from here
+# then if app.py wants to import api files for Blueprint, will not have circular import error
+
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
