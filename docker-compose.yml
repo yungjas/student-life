@@ -1,33 +1,20 @@
 version: "3.9"
 
-services:
-  ###################################
-  # Student_School: The Student_School microservice
-  ###################################
-  student_school:
+services:  
+  webserver:
     build:
-      context: ./backend/services/student_school
-      dockerfile: student_school.DOCKERFILE
-    image: student_school
-    restart: always
-    environment:
-      SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/student_school
-    ports:
-      - 6000:6000
-  
-  ###################################
-  # Book: The book microservice
-  ###################################
-  book:
-    build:
-      context: ./backend/services/book
-      dockerfile: book.DOCKERFILE
-    image: book
-    restart: always
-    environment:
-      SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:root@host.docker.internal:3310/book
+      context: ./backend
+      dockerfile: DOCKERFILE
+    command: python app.py
     ports:
       - 6010:6010
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - "./backend:/backend"
+    environment:
+      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
   
   db:
     image: mysql
@@ -35,7 +22,8 @@ services:
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: root
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: student_life_db
     volumes:             
       - ./backend/init:/docker-entrypoint-initdb.d
     ports:
@@ -47,7 +35,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_USER: root
-      PMA_PASSWORD: root
+      PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
       - 8083:80
 

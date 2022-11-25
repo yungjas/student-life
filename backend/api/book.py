@@ -1,12 +1,18 @@
-import book_model
-
+from flask import Flask, request, jsonify, Blueprint
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from model.Book import Book
 from config import db, app
-from flask import request, jsonify
+
+# have to use a different variable name from the file you are trying to blueprint otherwise error will occur 
+# see: https://stackoverflow.com/questions/38178776/function-object-has-no-attribute-name-when-registering-blueprint
+
+book_blueprint = Blueprint("book", __name__)
 
 
-@app.route("/api/book/all", methods=["GET"])
+@book_blueprint.route("/api/book/all", methods=["GET"])
 def get_books_all():
-    book_list = book_model.Book.query.all()
+    book_list = Book.query.all()
 
     if len(book_list):
         return jsonify(
@@ -25,9 +31,9 @@ def get_books_all():
     ), 404
 
 
-@app.route("/api/book/<int:book_id>", methods=["GET"])
+@book_blueprint.route("/api/book/<int:book_id>", methods=["GET"])
 def get_book(book_id):
-    book = book_model.Book.query.filter_by(book_id=book_id).first()
+    book = Book.query.filter_by(book_id=book_id).first()
     if book:
         return jsonify(
             {
@@ -45,10 +51,10 @@ def get_book(book_id):
     ), 404
 
 
-@app.route("/api/book/create", methods=["POST"])
+@book_blueprint.route("/api/book/create", methods=["POST"])
 def create_book():
     data = request.get_json()
-    book = book_model.Book(**data)
+    book = Book(**data)
 
     try:
         db.session.add(book)
@@ -71,10 +77,10 @@ def create_book():
     ), 201
 
 
-@app.route("/api/book/update/<int:book_id>", methods=["PUT"])
+@book_blueprint.route("/api/book/update/<int:book_id>", methods=["PUT"])
 def update_book(book_id):
     # retrieve the book to be changed
-    book = book_model.Book.query.filter_by(book_id=book_id).first()
+    book = Book.query.filter_by(book_id=book_id).first()
 
     if book:
         try:
@@ -113,10 +119,10 @@ def update_book(book_id):
     ), 404
 
 
-@app.route("/api/book/delete/<int:book_id>", methods=["DELETE"])
+@book_blueprint.route("/api/book/delete/<int:book_id>", methods=["DELETE"])
 def delete_book(book_id):
     # retrieve the book to be deleted
-    book = book_model.Book.query.filter_by(book_id=book_id).first()
+    book = Book.query.filter_by(book_id=book_id).first()
 
     if book:
         try:
@@ -144,8 +150,3 @@ def delete_book(book_id):
             "message": f"Book with id {book_id} not found"
         }
     ), 404 
-
-
-if __name__ == "__main__":
-    # should be binding to 0.0.0.0 if you want the container to be accessible from outside
-    app.run(host="0.0.0.0", port=6010, debug=True)
