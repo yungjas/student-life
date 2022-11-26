@@ -4,12 +4,14 @@ from flask_cors import CORS
 from model.StudentSchool import Student, School
 from os import environ
 from config import db, app
+from middleware.middleware import token_required
 
 student_school_blueprint = Blueprint("student_school", __name__)
 
 
 @student_school_blueprint.route("/api/student/all", methods=["GET"])
-def get_student_all():
+@token_required
+def get_student_all(current_user):
     student_list = Student.query.all()
     if len(student_list):
         return jsonify(
@@ -30,7 +32,8 @@ def get_student_all():
 
 
 @student_school_blueprint.route("/api/school/all", methods=["GET"])
-def get_school_all():
+@token_required
+def get_school_all(current_user):
     school_list = School.query.all()
     if len(school_list):
         return jsonify(
