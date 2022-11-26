@@ -53,7 +53,7 @@ def login():
         if user and bcrypt.check_password_hash(
             user.password, post_data.get('password')
         ):
-            auth_token = user.encode_auth_token(user.id)
+            auth_token = user.encode_auth_token(user.user_id)
             if auth_token:
                 responseObject = {
                     'status': 'success',
@@ -68,9 +68,8 @@ def login():
             }
             return jsonify(responseObject), 404
     except Exception as e:
-        print(e)
         responseObject = {
             'status': 'fail',
-            'message': 'Try again'
+            'message': e
         }
         return jsonify(responseObject), 500
