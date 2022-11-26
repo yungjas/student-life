@@ -25,7 +25,7 @@ def register():
             responseObject = {
                 'status': 'success',
                 'message': 'Successfully registered.',
-                'auth_token': auth_token
+                'auth_token': auth_token.decode()
             }
             
             return jsonify(responseObject), 201
