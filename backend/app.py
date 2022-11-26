@@ -1,10 +1,11 @@
 from config import app 
-from api import book, student_school
+from api import book, student_school, auth
 
 import os
 
 app.register_blueprint(book.book_blueprint)
 app.register_blueprint(student_school.student_school_blueprint)
+app.register_blueprint(auth.auth_blueprint)
 
 
 if __name__ == "__main__":

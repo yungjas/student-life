@@ -35,3 +35,14 @@ CREATE TABLE `book` (
 
 INSERT INTO `book` (`book_name`, `book_qty`) VALUES
 ("Le Book", 20);
+
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+    `user_id` int NOT NULL AUTO_INCREMENT,
+    `email` varchar(255) NOT NULL,
+    `password` varchar(255) NOT NULL,
+    `registered_on` DATETIME NOT NULL,
+    `admin` BOOLEAN NOT NULL,
+    PRIMARY KEY(`user_id`)
+);

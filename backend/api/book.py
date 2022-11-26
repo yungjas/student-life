@@ -1,8 +1,7 @@
-from flask import Flask, request, jsonify, Blueprint
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask import request, jsonify, Blueprint
 from model.Book import Book
-from config import db, app
+from config import db
+from middleware.middleware import token_required
 
 # have to use a different variable name from the file you are trying to blueprint otherwise error will occur 
 # see: https://stackoverflow.com/questions/38178776/function-object-has-no-attribute-name-when-registering-blueprint
@@ -11,7 +10,8 @@ book_blueprint = Blueprint("book", __name__)
 
 
 @book_blueprint.route("/api/book/all", methods=["GET"])
-def get_books_all():
+@token_required
+def get_books_all(current_user): #needs current_user param as we are checking the validity of user's auth token, if valid it will return the current user
     book_list = Book.query.all()
 
     if len(book_list):
@@ -32,7 +32,8 @@ def get_books_all():
 
 
 @book_blueprint.route("/api/book/<int:book_id>", methods=["GET"])
-def get_book(book_id):
+@token_required
+def get_book(current_user, book_id):
     book = Book.query.filter_by(book_id=book_id).first()
     if book:
         return jsonify(
@@ -52,7 +53,8 @@ def get_book(book_id):
 
 
 @book_blueprint.route("/api/book/create", methods=["POST"])
-def create_book():
+@token_required
+def create_book(current_user):
     data = request.get_json()
     book = Book(**data)
 
@@ -78,7 +80,8 @@ def create_book():
 
 
 @book_blueprint.route("/api/book/update/<int:book_id>", methods=["PUT"])
-def update_book(book_id):
+@token_required
+def update_book(current_user, book_id):
     # retrieve the book to be changed
     book = Book.query.filter_by(book_id=book_id).first()
 
@@ -120,7 +123,8 @@ def update_book(book_id):
 
 
 @book_blueprint.route("/api/book/delete/<int:book_id>", methods=["DELETE"])
-def delete_book(book_id):
+@token_required
+def delete_book(current_user, book_id):
     # retrieve the book to be deleted
     book = Book.query.filter_by(book_id=book_id).first()
 
