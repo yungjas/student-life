@@ -11,6 +11,7 @@ def register():
     post_data = request.get_json()
     print(f"email: {post_data.get('email')}")
     print(f"password: {post_data.get('password')}" )
+    
     # check if user already exists
     user = User.query.filter_by(email=post_data.get('email')).first()
     if not user:
