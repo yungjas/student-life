@@ -1,8 +1,6 @@
-from flask import Flask, request, jsonify, Blueprint
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask import request, jsonify, Blueprint
 from model.Book import Book
-from config import db, app
+from config import db
 from middleware.middleware import token_required
 
 # have to use a different variable name from the file you are trying to blueprint otherwise error will occur 

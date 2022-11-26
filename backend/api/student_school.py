@@ -1,8 +1,5 @@
-from flask import Flask, request, jsonify, Blueprint
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask import request, jsonify, Blueprint
 from model.StudentSchool import Student, School
-from os import environ
 from config import db, app
 from middleware.middleware import token_required
 

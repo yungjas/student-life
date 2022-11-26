@@ -2,8 +2,6 @@ from functools import wraps
 from flask import request
 from model.User import User
 
-import os
-import jwt
 
 def token_required(f):
     @wraps(f)

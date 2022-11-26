@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, Blueprint
+from flask import request, jsonify, Blueprint
 from model.User import User
-from config import db, app, bcrypt
+from config import db, bcrypt
 
 auth_blueprint = Blueprint("auth", __name__)
 

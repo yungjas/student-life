@@ -12,7 +12,7 @@ import os
 
 # flask configs
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+bcrypt = Bcrypt(app) # using bcrypt hashing functionalities for this application
 db = SQLAlchemy(app)
 
 # CORS config
