@@ -28,9 +28,9 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1), # expiration of the token
+                'iat': datetime.datetime.utcnow(), # time token is generated
+                'sub': user_id # subject of the token (the user whom it identifies)
             }
             return jwt.encode(
                 payload,
