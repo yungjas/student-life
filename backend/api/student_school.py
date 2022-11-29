@@ -92,3 +92,31 @@ def create_school(current_user):
                 "message": "School was created"
             }
         ), 201
+
+@student_school_blueprint.route("/api/school/update/<int:school_id>", methods=["PUT"])
+@token_required
+def update_school(current_user, school_id):
+    school = School.query.filter_by(school_id=school_id).first()
+    if school:
+        try:
+            data = request.get_json()
+            if data["school_name"]:
+                school.school_name = data["school_name"]
+                db.session.merge(school)
+                db.session.commit()
+
+                return jsonify(
+                    {
+                        "code": 200,
+                        "data":{
+                            "book": school.json()
+                        }
+                    }
+                ), 200
+        except Exception as e:
+            return jsonify(
+                {
+                    "code": 500,
+                    "message": f"School was unable to be updated due to {e}"
+                }
+            ), 500
