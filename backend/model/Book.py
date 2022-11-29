@@ -2,7 +2,7 @@ from config import db
 
 class Book(db.Model):
     __tablename__ = 'book'
-    book_id = db.Column(db.Integer, primary_key=True)
+    book_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     book_name = db.Column(db.String(64), nullable=False)
     book_qty = db.Column(db.Integer, nullable=False)
 

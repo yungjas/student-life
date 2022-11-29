@@ -2,11 +2,10 @@ from config import db
 
 class School(db.Model):
     __tablename__ = 'school'
-    school_id = db.Column(db.Integer, primary_key=True)
+    school_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     school_name = db.Column(db.String(64), nullable=False)
 
-    def __init__(self, school_id, school_name):
-        self.school_id = school_id
+    def __init__(self, school_name):
         self.school_name = school_name
         
     def json(self):
@@ -18,12 +17,11 @@ class School(db.Model):
 
 class Student(db.Model):
     __tablename__ = 'student'
-    student_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     student_name = db.Column(db.String(64), nullable=False)
     school_id = db.Column(db.ForeignKey('school.school_id'), nullable=False, index=True)
 
-    def __init__(self, student_id, student_name, school_id):
-        self.student_id = student_id
+    def __init__(self, student_name, school_id):
         self.student_name = student_name
         self.school_id = school_id
 

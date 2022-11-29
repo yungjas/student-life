@@ -48,3 +48,47 @@ def get_school_all(current_user):
             "message": "There are no schools"
         }
     )
+
+@student_school_blueprint.route("/api/student/create", methods=["POST"])
+@token_required
+def create_student(current_user):
+    data = request.get_json()
+    student = Student(**data)
+    try:
+        db.session.add(student)
+        db.session.commit()
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": f"Student was unable to be created due to {e}"
+            }
+        ), 500
+    return jsonify(
+            {
+                "code": 201,
+                "message": "Student was created"
+            }
+        ), 201
+
+@student_school_blueprint.route("/api/school/create", methods=["POST"])
+@token_required
+def create_school(current_user):
+    data = request.get_json()
+    school = School(**data)
+    try:
+        db.session.add(school)
+        db.session.commit()
+    except Exception as e:
+        return jsonify(
+            {
+                "code": 500,
+                "message": f"School was unable to be created due to {e}"
+            }
+        ), 500
+    return jsonify(
+            {
+                "code": 201,
+                "message": "School was created"
+            }
+        ), 201
