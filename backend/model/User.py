@@ -1,4 +1,5 @@
 from config import db, app, bcrypt
+from model.Blacklist import BlacklistToken
 
 import datetime
 import jwt
@@ -49,7 +50,11 @@ class User(db.Model):
         """
         try:
             payload = jwt.decode(auth_token, os.environ.get('SECRET_KEY'), algorithms=["HS256"])
-            return payload['sub']
+            is_blacklisted = BlacklistToken.check_blacklist(auth_token)
+            if is_blacklisted:
+                return "Token blacklisted. Please login again"
+            else:
+                return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:

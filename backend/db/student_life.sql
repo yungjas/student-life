@@ -46,3 +46,12 @@ CREATE TABLE `users` (
     `admin` BOOLEAN NOT NULL,
     PRIMARY KEY(`user_id`)
 );
+
+
+DROP TABLE IF EXISTS `blacklist_tokens`;
+CREATE TABLE `blacklist_tokens` (
+    `blacklist_id` int NOT NULL AUTO_INCREMENT,
+    `token` varchar(255) NOT NULL,
+    `blacklisted_on` DATETIME NOT NULL,
+     PRIMARY KEY(`blacklist_id`)  
+);
