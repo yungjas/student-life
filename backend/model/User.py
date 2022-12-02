@@ -50,6 +50,7 @@ class User(db.Model):
         """
         try:
             payload = jwt.decode(auth_token, os.environ.get('SECRET_KEY'), algorithms=["HS256"])
+            # check from Blacklist table if the token has been blacklisted
             is_blacklisted = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted:
                 return "Token blacklisted. Please login again"

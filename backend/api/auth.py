@@ -88,6 +88,7 @@ def logout(current_user):
     else:
         auth_token = ''
     if auth_token:
+        # decode the token
         resp = User.decode_auth_token(auth_token)
         if not isinstance(resp, str):
             # mark the token as blacklisted

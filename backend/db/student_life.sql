@@ -51,7 +51,7 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `blacklist_tokens`;
 CREATE TABLE `blacklist_tokens` (
     `blacklist_id` int NOT NULL AUTO_INCREMENT,
-    `token` varchar(255) NOT NULL,
+    `token` varchar(500) NOT NULL,
     `blacklisted_on` DATETIME NOT NULL,
      PRIMARY KEY(`blacklist_id`)  
 );
