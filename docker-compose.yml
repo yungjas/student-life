@@ -14,7 +14,7 @@ services:
     volumes:
       - "./backend:/backend"
     environment:
-      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
+      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI} #access variables in .env
       SECRET_KEY: ${SECRET_KEY}
       BCRYPT_LOG_ROUNDS: ${BCRYPT_LOG_ROUNDS}
   
