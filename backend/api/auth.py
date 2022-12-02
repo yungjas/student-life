@@ -25,13 +25,20 @@ def register():
             
             # generate the auth token
             auth_token = user.encode_auth_token(user.user_id)
-            responseObject = {
-                'status': 'success',
-                'message': 'Successfully registered.',
-                'auth_token': auth_token.decode()
-            }
-            
-            return jsonify(responseObject), 201
+            # for some reason decode is working in docker but not when running app.py locally, current workaround for now
+            if isinstance(auth_token, str):
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully logged in.',
+                    'auth_token': auth_token
+                }
+            else:
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully logged in.',
+                    'auth_token': auth_token.decode()
+                }
+            return jsonify(responseObject), 200
         except Exception as e:
             responseObject = {
                 'status': 'fail',
@@ -57,13 +64,19 @@ def login():
             user.password, post_data.get('password')
         ):
             auth_token = user.encode_auth_token(user.user_id)
-            if auth_token:
+            if isinstance(auth_token, str):
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully logged in.',
+                    'auth_token': auth_token
+                }
+            else:
                 responseObject = {
                     'status': 'success',
                     'message': 'Successfully logged in.',
                     'auth_token': auth_token.decode()
                 }
-                return jsonify(responseObject), 200
+            return jsonify(responseObject), 200
         else:
             responseObject = {
                 'status': 'fail',
