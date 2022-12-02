@@ -1,6 +1,8 @@
 from flask import request, jsonify, Blueprint
 from model.User import User
+from model.Blacklist import BlacklistToken
 from config import db, bcrypt
+from middleware.middleware import token_required
 
 auth_blueprint = Blueprint("auth", __name__)
 
@@ -74,3 +76,46 @@ def login():
             'message': e
         }
         return jsonify(responseObject), 500
+
+
+@auth_blueprint.route("/api/logout", methods=["POST"])
+@token_required
+def logout(current_user):
+    # get auth token
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        auth_token = auth_header.split(" ")[1]
+    else:
+        auth_token = ''
+    if auth_token:
+        resp = User.decode_auth_token(auth_token)
+        if not isinstance(resp, str):
+            # mark the token as blacklisted
+            blacklist_token = BlacklistToken(token=auth_token)
+            try:
+                # insert the token
+                db.session.add(blacklist_token)
+                db.session.commit()
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully logged out.'
+                }
+                return jsonify(responseObject), 200
+            except Exception as e:
+                responseObject = {
+                    'status': 'fail',
+                    'message': e
+                }
+                return jsonify(responseObject), 200
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': resp
+            }
+            return jsonify(responseObject), 401
+    else:
+        responseObject = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token.'
+        }
+        return jsonify(responseObject), 403
